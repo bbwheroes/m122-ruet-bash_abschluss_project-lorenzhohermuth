@@ -16,7 +16,7 @@ Not only that but it also tracks the uses and execution times of these commands 
 
 ## License
 
-[MIT](LICENSE.md)
+[MIT](LICENSE)
 
 
 ## Used By
