@@ -1,2 +1,2 @@
 #!/bin/bash
-bash cmd/sys-links/verify-link
+bash /home/lorenz/Documents/github/bbw/m122-ruet-bash_abschluss_project-lorenzhohermuth/cmd/sys-links/verify-link
