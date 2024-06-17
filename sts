@@ -10,7 +10,7 @@ create_command () {
 	chmod o+rx $cmd_path
 
 	echo "#!/bin/bash" > $cmd_path
-	echo "bash $root_path/cmd/sys-links/$1-link" >> $cmd_path
+	echo "bash $root_path/cmd/sym-links/$1-link" >> $cmd_path
 }
 
 while test -n "$1"; do
@@ -21,7 +21,7 @@ while test -n "$1"; do
 		new)
 			command_name=$2
 			bash_file=$3
-			ln -srf "$bash_file" "$root_path/cmd/sys-links/$command_name-link"
+			ln -srf "$bash_file" "$root_path/cmd/sym-links/$command_name-link"
 			create_command "$command_name"
 			shift; shift
 			;;
