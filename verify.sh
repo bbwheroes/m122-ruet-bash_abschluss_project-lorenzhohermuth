@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo "is okey"
+echo "is okey $1"

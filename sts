@@ -1,29 +1,65 @@
 #!/bin/bash
 
+version="0.1.0"
+
 bin_path=$(readlink -f ${BASH_SOURCE[0]})
 root_path=$(echo "$bin_path" | sed 's|\(.*\)/.*|\1|')
 
 create_command () {
 	cmd_path="$root_path/cmd/$1"
+	log_path="$root_path/cmd/stats/$1.log"
+	link_path="$root_path/cmd/sym-links/$1-link"
 
 	sudo touch $cmd_path
 	chmod o+rx $cmd_path
 
 	echo "#!/bin/bash" > $cmd_path
-	echo "bash $root_path/cmd/sym-links/$1-link" >> $cmd_path
+	echo "echo \"$version \$(date +%Y-%m-%d-%H-%M-%S) \$(whoami) \" >> $log_path" >> $cmd_path
+	echo "bash $link_path \$@" >> $cmd_path
+
+	sudo touch $log_path
+	chmod o+rw $log_path
+}
+
+delete_command () {
+	cmd_path="$root_path/cmd/$1"
+	log_path="$root_path/cmd/stats/$1.log"
+	link_path="$root_path/cmd/sym-links/$1-link"
+
+	rm $cmd_path
+	rm $log_path
+	rm $link_path
 }
 
 while test -n "$1"; do
 	case $1 in
 		-h|--help)
-			echo "Usage: sts.sh [-h|--help] <name> <bash-file>"
+			echo "Usage: sts.sh [-h|--help] new <name> <bash-file>"
+			;;
+		
+		-v|--version)
+			echo "sts version $version"
 			;;
 
 		new)
 			command_name=$2
 			bash_file=$3
 			ln -srf "$bash_file" "$root_path/cmd/sym-links/$command_name-link"
-			create_command "$command_name"
+			create_command $command_name
+			shift; shift
+			;;
+
+		remove)
+			delete_command $2
+			shift
+			;;
+
+		refresh)
+			command_name=$2
+			bash_file=$3
+			delete_command $command_name
+			ln -srf "$bash_file" "$root_path/cmd/sym-links/$command_name-link"
+			create_command $command_name
 			shift; shift
 			;;
 
@@ -37,7 +73,7 @@ while test -n "$1"; do
 			ln -s /usr/lib/sts/sts /usr/local/bin/sts
 			echo "[2] created symlink from /usr/lib/sts/sts to /usr/local/bin/sts"
 
-			echo "[3] Add: export PATH=$PATH:\"...:/usr/lib/sts/cmd\" to your .bashrc or .zshrc file"
+			echo "[3] Add: export PATH=\$PATH:\"...:/usr/lib/sts/cmd\" to your .bashrc or .zshrc file"
 			;;
 
 		uninstall)
@@ -47,7 +83,7 @@ while test -n "$1"; do
 			rm /usr/local/bin/sts
 			echo "[2] removed symlink from /usr/local/bin/sts"
 
-			echo "[3] remove: export PATH=$PATH:\"...:/usr/lib/sts/cmd\" from your .bashrc or .zshrc file"
+			echo "[3] remove: export PATH=\$PATH:\"...:/usr/lib/sts/cmd\" from your .bashrc or .zshrc file"
 			;;
 
 		*)
