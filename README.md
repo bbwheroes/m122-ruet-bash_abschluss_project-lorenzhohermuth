@@ -3,7 +3,7 @@
 
 A next-generation command line tool that takes your sheep (you're allowed to keep your breath) away.
 
-It takes your bash scripts and creates custom-named system-wide available command out of it.
+It takes your bash scripts and creates custom-named system-wide available commands out of it.
 
 Not only that but it also tracks the uses and execution times of these commands so you can analyze and optimize your commands.
 
