@@ -18,6 +18,7 @@ while test -n "$1"; do
 		-h|--help)
 			echo "Usage: sts.sh [-h|--help] <name> <bash-file>"
 			;;
+
 		new)
 			command_name=$2
 			bash_file=$3
@@ -25,9 +26,33 @@ while test -n "$1"; do
 			create_command "$command_name"
 			shift; shift
 			;;
-			*)
-				echo $(readlink -f ${BASH_SOURCE[0]})
-				echo "sts: Unknown command: $1"
+
+		install)
+			mkdir -p /usr/lib/sts/cmd/sym-links
+			echo "[1] created directory /usr/lib/sts/cmd/sym-links"
+
+			cp sts /usr/lib/sts/sts
+			echo "[2] Copied sts to /usr/lib/sts"
+
+			ln -s /usr/lib/sts/sts /usr/local/bin/sts
+			echo "[2] created symlink from /usr/lib/sts/sts to /usr/local/bin/sts"
+
+			echo "[3] Add: export PATH=$PATH:\"...:/usr/lib/sts/cmd\" to your .bashrc or .zshrc file"
+			;;
+
+		uninstall)
+			rm -rf /usr/lib/sts
+			echo "[1] Removed sts from /usr/lib/sts"
+
+			rm /usr/local/bin/sts
+			echo "[2] removed symlink from /usr/local/bin/sts"
+
+			echo "[3] remove: export PATH=$PATH:\"...:/usr/lib/sts/cmd\" from your .bashrc or .zshrc file"
+			;;
+
+		*)
+			echo $(readlink -f ${BASH_SOURCE[0]})
+			echo "sts: Unknown command: $1"
 			;;
 	esac
 	shift
