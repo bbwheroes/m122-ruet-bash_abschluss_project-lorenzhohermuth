@@ -23,11 +23,20 @@ Not only that but it also tracks the uses and execution times of these commands 
 
 This project is used by the following companies:
 
-- Booble
-- Microhard
-- Mwidea
-- Congo (other rainforest than Amazon)
-
+<table border="0">
+ <tr>
+    <td><img src="/img/boogle.png" alt="Boogle" width="250" /></td>
+    <td><img src="/img/microhard.png" alt="Microhard" width="250" /></td>
+    <td><img src="/img/mwidea.png" alt="Mwidea" width="250" /></td>
+    <td><img src="/img/congo.png" alt="Congo" width="250" /></td>
+ </tr>
+ <tr>
+    <td>Booble</td>
+    <td>Microhard</td>
+    <td>Mwidea</td>
+    <td>Congo (other rainforest than Amazon)</td>
+</tr>
+</table>
 
 ## Usage
 
