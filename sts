@@ -70,7 +70,7 @@ while test -n "$1"; do
 			mkdir -p /usr/local/lib/sts/cmd/stats
 			echo "[2] created directory /usr/local/lib/sts/cmd/stats"
 
-			cp sts /usr/local/lib/sts/sts
+			curl -o /usr/local/lib/sts https://raw.githubusercontent.com/bbwheroes/m122-ruet-bash_abschluss_project-lorenzhohermuth/main/sts
 			echo "[3] Copied sts to /usr/local/lib/sts"
 
 			ln -s /usr/local/lib/sts/sts /usr/local/bin/sts
