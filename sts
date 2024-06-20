@@ -44,7 +44,7 @@ while test -n "$1"; do
 		new)
 			command_name=$2
 			bash_file=$3
-			ln -srf "$bash_file" "$root_path/cmd/sym-links/$command_name-link"
+			ln -sf "$(pwd)/$bash_file" "$root_path/cmd/sym-links/$command_name-link"
 			create_command $command_name
 			shift; shift
 			;;
@@ -58,7 +58,7 @@ while test -n "$1"; do
 			command_name=$2
 			bash_file=$3
 			delete_command $command_name
-			ln -srf "$bash_file" "$root_path/cmd/sym-links/$command_name-link"
+			ln -sf "$(pwd)/$bash_file" "$root_path/cmd/sym-links/$command_name-link"
 			create_command $command_name
 			shift; shift
 			;;
@@ -90,7 +90,6 @@ while test -n "$1"; do
 			;;
 
 		*)
-			echo $(readlink -f ${BASH_SOURCE[0]})
 			echo "sts: Unknown command: $1"
 			;;
 	esac
