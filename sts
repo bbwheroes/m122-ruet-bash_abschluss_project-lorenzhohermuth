@@ -64,26 +64,29 @@ while test -n "$1"; do
 			;;
 
 		install)
-			mkdir -p /usr/lib/sts/cmd/sym-links
-			echo "[1] created directory /usr/lib/sts/cmd/sym-links"
+			mkdir -p /usr/local/lib/sts/cmd/sym-links
+			echo "[1] created directory /usr/local/lib/sts/cmd/sym-links"
 
-			cp sts /usr/lib/sts/sts
-			echo "[2] Copied sts to /usr/lib/sts"
+			mkdir -p /usr/local/lib/sts/cmd/stats
+			echo "[2] created directory /usr/local/lib/sts/cmd/stats"
 
-			ln -s /usr/lib/sts/sts /usr/local/bin/sts
-			echo "[2] created symlink from /usr/lib/sts/sts to /usr/local/bin/sts"
+			cp sts /usr/local/lib/sts/sts
+			echo "[3] Copied sts to /usr/local/lib/sts"
 
-			echo "[3] Add: export PATH=\$PATH:\"...:/usr/lib/sts/cmd\" to your .bashrc or .zshrc file"
+			ln -s /usr/local/lib/sts/sts /usr/local/bin/sts
+			echo "[4] created symlink from /usr/local/lib/sts/sts to /usr/local/bin/sts"
+
+			echo "[5] Add: export PATH=\$PATH:\"...:/usr/local/lib/sts/cmd\" to your .bashrc or .zshrc file"
 			;;
 
 		uninstall)
-			rm -rf /usr/lib/sts
-			echo "[1] Removed sts from /usr/lib/sts"
+			rm -rf /usr/local/lib/sts
+			echo "[1] Removed sts from /usr/local/lib/sts"
 
 			rm /usr/local/bin/sts
 			echo "[2] removed symlink from /usr/local/bin/sts"
 
-			echo "[3] remove: export PATH=\$PATH:\"...:/usr/lib/sts/cmd\" from your .bashrc or .zshrc file"
+			echo "[3] remove: export PATH=\$PATH:\"...:/usr/local/lib/sts/cmd\" from your .bashrc or .zshrc file"
 			;;
 
 		*)
