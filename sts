@@ -31,6 +31,30 @@ delete_command () {
 	rm $link_path
 }
 
+print_stats () {
+	command_name=$1
+	file_path="$root_path/cmd/stats/$command_name.log"
+	declare -A statsmap
+	while IFS= read -r line ; do
+		raw_timestamp=$(awk '{print $2}' <<< "$line")
+		user=$(awk '{print $3}' <<< "$line")
+
+		timestamp=${raw_timestamp:0:10}
+
+		statsmap["$timestamp"]=$(( ${statsmap["$timestamp"]} + 1 ))
+	done < "$file_path"
+
+	echo "$command_name"
+	for date in "${!statsmap[@]}" ; do
+		amout=${statsmap["$date"]}
+		squares=""
+		for i in $(seq 1 $amout); do
+			squares="$squares■"
+		done
+		echo "$date $squares"
+	done
+}
+
 while test -n "$1"; do
 	case $1 in
 		-h|--help)
@@ -51,6 +75,17 @@ while test -n "$1"; do
 
 		remove)
 			delete_command $2
+			shift
+			;;
+
+		stats)
+			command_name=$2
+			if [ -z "$command_name" ]; then
+				echo "sts: No command name specified for stats"
+			else
+				print_stats $command_name
+			fi
+
 			shift
 			;;
 
