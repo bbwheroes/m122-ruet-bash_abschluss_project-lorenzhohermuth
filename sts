@@ -33,6 +33,7 @@ delete_command () {
 
 print_stats () {
 	command_name=$1
+	highest_usage=0
 	file_path="$root_path/cmd/stats/$command_name.log"
 	declare -A statsmap
 	while IFS= read -r line ; do
@@ -42,13 +43,31 @@ print_stats () {
 		timestamp=${raw_timestamp:0:10}
 
 		statsmap["$timestamp"]=$(( ${statsmap["$timestamp"]} + 1 ))
+		if [ ${statsmap["$timestamp"]} -gt $highest_usage ]; then
+			highest_usage=${statsmap["$timestamp"]}
+		fi
 	done < "$file_path"
 
-	echo "$command_name"
+	multiplier=1000 # because on smaller number then 1 it gets converted to 0
+	length_of_date=10
+	
+	columns_free=$(( $(tput cols) - length_of_date - 2))
+	squares_per_usage=$(( columns_free * multiplier / highest_usage ))
+
+
+	axies="0"
+	for iu in $(seq 1 $(( columns_free - $(expr length $highest_usage) - 1 )) ); do
+		axies="${axies}-"
+	done
+	axies="$axies$highest_usage"
+		
+	echo "command: $command_name"
+	echo "usage:     $axies"
+	
 	for date in "${!statsmap[@]}" ; do
 		amout=${statsmap["$date"]}
 		squares=""
-		for i in $(seq 1 $amout); do
+		for i in $(seq 1 $(( $amout * $squares_per_usage / $multiplier))); do
 			squares="$squares■"
 		done
 		echo "$date $squares"
