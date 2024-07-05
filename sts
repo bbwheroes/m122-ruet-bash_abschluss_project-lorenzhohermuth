@@ -5,6 +5,9 @@ version="0.1.0"
 bin_path=$(readlink -f ${BASH_SOURCE[0]})
 root_path=$(echo "$bin_path" | sed 's|\(.*\)/.*|\1|')
 
+blue='\033[0;34m'
+no_color='\033[0m'
+
 create_command () {
 	cmd_path="$root_path/cmd/$1"
 	log_path="$root_path/cmd/stats/$1.log"
@@ -77,7 +80,16 @@ print_stats () {
 while test -n "$1"; do
 	case $1 in
 		-h|--help)
-			echo "Usage: sts.sh [-h|--help] new <name> <bash-file>"
+			cat << EOF
+Usage: sts [-h|--help] <command>
+Install:
+	./sts install
+	sts uninstall
+Commands:
+	sts new <command-name> ./your-file.sh
+	sts remove <command-name>
+	sts stats <command-name>
+EOF
 			;;
 		
 		-v|--version)
@@ -130,7 +142,7 @@ while test -n "$1"; do
 			ln -s /usr/local/lib/sts/sts /usr/local/bin/sts
 			echo "[4] created symlink from /usr/local/lib/sts/sts to /usr/local/bin/sts"
 
-			echo "[5] Add: export PATH=\$PATH:\"...:/usr/local/lib/sts/cmd\" to your .bashrc or .zshrc file"
+			echo -e "${blue}[5] Add: export PATH=\$PATH:\"...:/usr/local/lib/sts/cmd\" to your .bashrc or .zshrc file${no_color}"
 			;;
 
 		uninstall)
@@ -140,7 +152,7 @@ while test -n "$1"; do
 			rm /usr/local/bin/sts
 			echo "[2] removed symlink from /usr/local/bin/sts"
 
-			echo "[3] remove: export PATH=\$PATH:\"...:/usr/local/lib/sts/cmd\" from your .bashrc or .zshrc file"
+			echo -e "${blue}[3] remove: export PATH=\$PATH:\"...:/usr/local/lib/sts/cmd\" from your .bashrc or .zshrc file${no_color}"
 			;;
 
 		*)
