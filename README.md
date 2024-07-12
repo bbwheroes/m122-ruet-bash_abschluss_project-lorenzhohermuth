@@ -38,12 +38,25 @@ This project is used by the following companies:
 </tr>
 </table>
 
+## Install
+
+Download only the `sts` file and run
+
+```bash
+sudo ./sts install
+```
+if you want to uninstall just run
+
+```bash
+sudo sts uninstall
+```
+
 ## Usage
 
 ### Create new command
 
 ```bash
-sts new <command-name> ./your-file.sh
+sudo sts new <command-name> ./your-file.sh
 ```
 
 ### See stats for command
@@ -55,6 +68,6 @@ sts stats <command-name>
 ### Remove command
 
 ```bash
-sts remove <command-name>
+sudo sts remove <command-name>
 ```
 
