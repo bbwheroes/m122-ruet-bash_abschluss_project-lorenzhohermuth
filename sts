@@ -2,8 +2,11 @@
 
 version="0.1.0"
 
-bin_path=$(readlink -f ${BASH_SOURCE[0]})
+bin_path=$(readlink -f "${BASH_SOURCE[0]}")
 root_path=$(echo "$bin_path" | sed 's|\(.*\)/.*|\1|')
+
+echo $bin_path
+echo $root_path
 
 blue='\033[0;34m'
 no_color='\033[0m'
@@ -13,15 +16,15 @@ create_command () {
 	log_path="$root_path/cmd/stats/$1.log"
 	link_path="$root_path/cmd/sym-links/$1-link"
 
-	sudo touch $cmd_path
-	chmod o+rx $cmd_path
+	sudo touch "$cmd_path"
+	chmod o+rx "$cmd_path"
 
-	echo "#!/bin/bash" > $cmd_path
-	echo "echo \"$version \$(date +%Y-%m-%d-%H-%M-%S) \$(whoami) \" >> $log_path" >> $cmd_path
-	echo "bash $link_path \$@" >> $cmd_path
+	echo "#!/bin/bash" > "$cmd_path"
+	echo "echo \"$version \$(date +%Y-%m-%d-%H-%M-%S) \$(whoami) \" >> $log_path" >> "$cmd_path"
+	echo "bash $link_path \$@" >> "$cmd_path"
 
-	sudo touch $log_path
-	chmod o+rw $log_path
+	sudo touch "$log_path"
+	chmod o+rw "$log_path"
 }
 
 delete_command () {
@@ -29,9 +32,9 @@ delete_command () {
 	log_path="$root_path/cmd/stats/$1.log"
 	link_path="$root_path/cmd/sym-links/$1-link"
 
-	rm $cmd_path
-	rm $log_path
-	rm $link_path
+	rm "$cmd_path"
+	rm "$log_path"
+	rm "$link_path"
 }
 
 print_stats () {
@@ -41,12 +44,11 @@ print_stats () {
 	declare -A statsmap
 	while IFS= read -r line ; do
 		raw_timestamp=$(awk '{print $2}' <<< "$line")
-		user=$(awk '{print $3}' <<< "$line")
 
 		timestamp=${raw_timestamp:0:10}
 
 		statsmap["$timestamp"]=$(( ${statsmap["$timestamp"]} + 1 ))
-		if [ ${statsmap["$timestamp"]} -gt $highest_usage ]; then
+		if [ "${statsmap["$timestamp"]}" -gt "$highest_usage" ]; then
 			highest_usage=${statsmap["$timestamp"]}
 		fi
 	done < "$file_path"
@@ -59,7 +61,7 @@ print_stats () {
 
 
 	axies="0"
-	for iu in $(seq 1 $(( columns_free - $(expr length $highest_usage) - 1 )) ); do
+	for _ in $(seq 1 $(( columns_free - ${#"$highest_usage"} - 1 )) ); do
 		axies="${axies}-"
 	done
 	axies="$axies$highest_usage"
@@ -70,7 +72,7 @@ print_stats () {
 	for date in "${!statsmap[@]}" ; do
 		amout=${statsmap["$date"]}
 		squares=""
-		for i in $(seq 1 $(( $amout * $squares_per_usage / $multiplier))); do
+		for _ in $(seq 1 $(( amout * squares_per_usage / multiplier))); do
 			squares="$squares■"
 		done
 		echo "$date $squares"
@@ -100,12 +102,12 @@ EOF
 			command_name=$2
 			bash_file=$3
 			ln -sf "$(pwd)/$bash_file" "$root_path/cmd/sym-links/$command_name-link"
-			create_command $command_name
+			create_command "$command_name"
 			shift; shift
 			;;
 
 		remove)
-			delete_command $2
+			delete_command "$2"
 			shift
 			;;
 
@@ -114,7 +116,7 @@ EOF
 			if [ -z "$command_name" ]; then
 				echo "sts: No command name specified for stats"
 			else
-				print_stats $command_name
+				print_stats "$command_name"
 			fi
 
 			shift
@@ -123,9 +125,9 @@ EOF
 		refresh)
 			command_name=$2
 			bash_file=$3
-			delete_command $command_name
+			delete_command "$command_name"
 			ln -sf "$(pwd)/$bash_file" "$root_path/cmd/sym-links/$command_name-link"
-			create_command $command_name
+			create_command "$command_name"
 			shift; shift
 			;;
 
@@ -136,7 +138,7 @@ EOF
 			mkdir -p /usr/local/lib/sts/cmd/stats
 			echo "[2] created directory /usr/local/lib/sts/cmd/stats"
 
-			cp $bin_path /usr/local/lib/sts/sts
+			cp "$bin_path" /usr/local/lib/sts/sts
 			echo "[3] Copied sts to /usr/local/lib/sts"
 
 			ln -s /usr/local/lib/sts/sts /usr/local/bin/sts
